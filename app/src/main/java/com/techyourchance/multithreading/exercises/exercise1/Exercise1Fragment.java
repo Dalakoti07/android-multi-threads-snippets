@@ -1,6 +1,8 @@
 package com.techyourchance.multithreading.exercises.exercise1;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ public class Exercise1Fragment extends BaseFragment {
     }
 
     private Button mBtnCountIterations;
+    private Handler handler= new Handler(Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -63,11 +66,16 @@ public class Exercise1Fragment extends BaseFragment {
                 while (System.currentTimeMillis() <= endTimestamp) {
                     iterationsCount++;
                 }
-
-                Log.d(
-                        "Exercise1",
-                        "iterations in " + ITERATIONS_COUNTER_DURATION_SEC + "seconds: " + iterationsCount
-                );
+                final int iterationsCountFinal=iterationsCount;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(
+                                "Exercise1 :"," on thread "+Thread.currentThread().getName()
+                        );
+                        mBtnCountIterations.setText("iterations count " + iterationsCountFinal );
+                    }
+                });
             }
         }).start();
     }

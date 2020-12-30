@@ -1,6 +1,8 @@
 package com.techyourchance.multithreading.exercises.exercise3;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ public class Exercise3Fragment extends BaseFragment {
 
     private Button mBtnCountSeconds;
     private TextView mTxtCount;
+    private Handler handler= new Handler(Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -55,5 +58,34 @@ public class Exercise3Fragment extends BaseFragment {
         3. Show count in TextView
         4. When count completes, show "done" in TextView and enable the button
          */
+        mBtnCountSeconds.setEnabled(false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int counter=0;
+                while (counter<SECONDS_TO_COUNT){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    counter++;
+                    final int showedValue=counter;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTxtCount.setText(""+showedValue);
+                        }
+                    });
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTxtCount.setText("Done");
+                        mBtnCountSeconds.setEnabled(true);
+                    }
+                });
+            }
+        }).start();
     }
 }

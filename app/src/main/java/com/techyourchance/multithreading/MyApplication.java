@@ -6,6 +6,7 @@ import com.techyourchance.multithreading.common.dependencyinjection.ApplicationC
 
 import static kotlinx.coroutines.DispatchersKt.IO_PARALLELISM_PROPERTY_NAME;
 
+//todo ask why 101 frames are skipped when application has just started
 public class MyApplication extends Application {
 
     private final ApplicationCompositionRoot mApplicationCompositionRoot =
