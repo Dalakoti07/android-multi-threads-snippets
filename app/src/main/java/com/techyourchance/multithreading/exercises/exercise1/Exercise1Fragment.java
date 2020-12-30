@@ -52,17 +52,23 @@ public class Exercise1Fragment extends BaseFragment {
     }
 
     private void countIterations() {
-        long startTimestamp = System.currentTimeMillis();
-        long endTimestamp = startTimestamp + ITERATIONS_COUNTER_DURATION_SEC * 1000;
+        // counting iterations for 10 seconds, so do it in background thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long startTimestamp = System.currentTimeMillis();
+                long endTimestamp = startTimestamp + ITERATIONS_COUNTER_DURATION_SEC * 1000;
 
-        int iterationsCount = 0;
-        while (System.currentTimeMillis() <= endTimestamp) {
-            iterationsCount++;
-        }
+                int iterationsCount = 0;
+                while (System.currentTimeMillis() <= endTimestamp) {
+                    iterationsCount++;
+                }
 
-        Log.d(
-                "Exercise1",
-                "iterations in " + ITERATIONS_COUNTER_DURATION_SEC + "seconds: " + iterationsCount
-        );
+                Log.d(
+                        "Exercise1",
+                        "iterations in " + ITERATIONS_COUNTER_DURATION_SEC + "seconds: " + iterationsCount
+                );
+            }
+        }).start();
     }
 }
