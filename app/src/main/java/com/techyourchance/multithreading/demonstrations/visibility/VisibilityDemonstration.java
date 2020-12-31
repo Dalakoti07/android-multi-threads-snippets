@@ -2,9 +2,11 @@ package com.techyourchance.multithreading.demonstrations.visibility;
 
 public class VisibilityDemonstration {
 
-    // don't need to make it volatile we are going with syncronization
-    private static int sCount = 0;
-    private static final Object LOCK=new Object();
+    private static class Counter{
+        private volatile int mCount=0;
+    }
+
+    private static Counter sCount = new Counter();
 
     public static void main(String[] args) {
         new Consumer().start();
@@ -21,14 +23,12 @@ public class VisibilityDemonstration {
         public void run() {
             int localValue = -1;
             while (true) {
-                synchronized (LOCK){
-                    if (localValue != sCount) {
-                        System.out.println("Consumer: detected count change " + sCount);
-                        localValue = sCount;
-                    }
-                    if (sCount >= 5) {
-                        break;
-                    }
+                if (localValue != sCount.mCount) {
+                    System.out.println("Consumer: detected count change " + sCount.mCount);
+                    localValue = sCount.mCount;
+                }
+                if (sCount.mCount >= 5) {
+                    break;
                 }
             }
             System.out.println("Consumer: terminating");
@@ -39,14 +39,12 @@ public class VisibilityDemonstration {
         @Override
         public void run() {
             while (true) {
-                synchronized (LOCK){
-                    if(sCount>=5)
-                        break;
-                    int localValue = sCount;
-                    localValue++;
-                    System.out.println("Producer: incrementing count to " + localValue);
-                    sCount = localValue;
-                }
+                if(sCount.mCount>=5)
+                    break;
+                int localValue = sCount.mCount;
+                localValue++;
+                System.out.println("Producer: incrementing count to " + localValue);
+                sCount.mCount = localValue;
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
