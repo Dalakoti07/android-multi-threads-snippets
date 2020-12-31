@@ -2,7 +2,8 @@ package com.techyourchance.multithreading.demonstrations.visibility;
 
 public class VisibilityDemonstration {
 
-    private static int sCount = 0;
+    // dont need to make it volatile we are going with syncronization
+    private volatile static int sCount = 0;
 
     public static void main(String[] args) {
         new Consumer().start();
@@ -39,11 +40,11 @@ public class VisibilityDemonstration {
                 localValue++;
                 System.out.println("Producer: incrementing count to " + localValue);
                 sCount = localValue;
-                try {
+                /*try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     return;
-                }
+                }*/
             }
             System.out.println("Producer: terminating");
         }
