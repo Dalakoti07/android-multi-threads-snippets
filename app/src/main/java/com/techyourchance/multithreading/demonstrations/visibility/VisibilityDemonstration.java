@@ -2,7 +2,7 @@ package com.techyourchance.multithreading.demonstrations.visibility;
 
 public class VisibilityDemonstration {
 
-    // dont need to make it volatile we are going with syncronization
+    // don't need to make it volatile we are going with syncronization
     private static int sCount = 0;
     private static final Object LOCK=new Object();
 
@@ -40,12 +40,17 @@ public class VisibilityDemonstration {
         public void run() {
             while (true) {
                 synchronized (LOCK){
+                    if(sCount>=5)
+                        break;
                     int localValue = sCount;
                     localValue++;
                     System.out.println("Producer: incrementing count to " + localValue);
                     sCount = localValue;
-                    if(sCount>=5)
-                        break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             System.out.println("Producer: terminating");
