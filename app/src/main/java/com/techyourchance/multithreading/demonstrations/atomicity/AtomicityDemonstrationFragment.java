@@ -36,9 +36,7 @@ public class AtomicityDemonstrationFragment extends BaseFragment {
 
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
 
-    // using a volatitle (for visibility) and atomic variable (for atomicity) which would give us
-    // concurrent results
-    private volatile AtomicInteger mCount= new AtomicInteger(0);
+    private final AtomicInteger mCount= new AtomicInteger(0);
 
     @Nullable
     @Override
